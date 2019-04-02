@@ -93,6 +93,7 @@ class ComposedQuery(object):
         return self
 
     def addDrilldownQuery(self, core, drilldownQuery):
+        print(self._drilldownQueries)
         self.cores.add(core)
         self._drilldownQueries.setdefault(core, []).append(drilldownQuery)
         return self

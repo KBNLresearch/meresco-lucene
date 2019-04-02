@@ -263,26 +263,26 @@ class ConvertToComposedQueryTest(SeecrTestCase):
         self.assertEquals([cqlToExpression('*')], cq.queriesFor('defaultCore'))
 
     def testDrilldownQueries(self):
-        consume(self.tree.any.executeQuery(cqlAbstractSyntaxTree=parseCQL('*'), extraArguments={}, drilldownQueries=[('field', ['path1', 'path2'])]))
+        consume(self.tree.any.executeQuery(cqlAbstractSyntaxTree=parseCQL('*'), extraArguments={}, drilldownQueries=[('field', [['path1'], ['path2']])]))
         self.assertEquals(['executeComposedQuery'], self.observer.calledMethodNames())
         cq = self.observer.calledMethods[0].kwargs['query']
         cq.validate()
-        self.assertEquals([('field', ['path1', 'path2'])], cq.drilldownQueriesFor('defaultCore'))
+        self.assertEquals([('field', [['path1'], ['path2']])], cq.drilldownQueriesFor('defaultCore'))
 
     def testDrilldownQueriesForOtherCore(self):
-        consume(self.tree.any.executeQuery(cqlAbstractSyntaxTree=parseCQL('*'), extraArguments={}, drilldownQueries=[('otherCore.field', ['path1', 'path2'])]))
+        consume(self.tree.any.executeQuery(cqlAbstractSyntaxTree=parseCQL('*'), extraArguments={}, drilldownQueries=[('otherCore.field', [['path1'], ['path2']])]))
         self.assertEquals(['executeComposedQuery'], self.observer.calledMethodNames())
         cq = self.observer.calledMethods[0].kwargs['query']
         cq.validate()
-        self.assertEquals([('field', ['path1', 'path2'])], cq.drilldownQueriesFor('otherCore'))
+        self.assertEquals([('field', [['path1'], ['path2']])], cq.drilldownQueriesFor('otherCore'))
 
     def testDrilldownQueriesWithTranslate(self):
-        consume(self.tree.any.executeQuery(cqlAbstractSyntaxTree=parseCQL('*'), extraArguments={}, drilldownQueries=[('toBePrefixed', ['path1', 'path2']), ('otherCore.toBePrefixed', ['path3'])]))
+        consume(self.tree.any.executeQuery(cqlAbstractSyntaxTree=parseCQL('*'), extraArguments={}, drilldownQueries=[('toBePrefixed', [['path1'], ['path2']]), ('otherCore.toBePrefixed', [['path3']])]))
         self.assertEquals(['executeComposedQuery'], self.observer.calledMethodNames())
         cq = self.observer.calledMethods[0].kwargs['query']
         cq.validate()
-        self.assertEquals([('prefix.toBePrefixed', ['path1', 'path2'])], cq.drilldownQueriesFor('defaultCore'))
-        self.assertEquals([('prefix.toBePrefixed', ['path3'])], cq.drilldownQueriesFor('otherCore'))
+        self.assertEquals([('prefix.toBePrefixed', [['path1'], ['path2']])], cq.drilldownQueriesFor('defaultCore'))
+        self.assertEquals([('prefix.toBePrefixed', [['path3']])], cq.drilldownQueriesFor('otherCore'))
 
     def testClustering(self):
         consume(self.tree.any.executeQuery(cqlAbstractSyntaxTree=parseCQL('*'), extraArguments={'x-clustering': ['true']}))

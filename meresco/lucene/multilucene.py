@@ -51,6 +51,8 @@ class MultiLucene(Observable):
         for sortKey in query.sortKeys:
             coreName = sortKey.get('core', query.resultsFrom)
             self.call[coreName].updateSortKey(sortKey)
+        print ('deep multilucene')
+        print (query.asDict())
         responseDict = (yield self._connect.send(jsonDict=JsonDict(query.asDict()), path='/query/'))
         response = luceneResponseFromDict(responseDict)
         response.info = query.infoDict()
