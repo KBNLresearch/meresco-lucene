@@ -144,6 +144,7 @@ class _Converter(object):
         terms = self._pre_analyzeToken(index, termString)
         if len(terms) == 1:
             if prefixRegexp.match(termString):
+                print('makes prefixquery: %s' % terms[0])
                 return dict(type="PrefixQuery", term=self._createStringTerm(index, terms[0]))
             else:
                 terms = self._post_analyzeToken(index, terms[0])

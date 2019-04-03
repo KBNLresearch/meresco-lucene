@@ -28,6 +28,7 @@
 from .utils import simplifiedDict
 from meresco.components.json import JsonDict
 from simplejson.decoder import JSONDecodeError
+from cqlparser.cqltoexpression import QueryExpression
 
 
 class ComposedQuery(object):
@@ -212,6 +213,7 @@ class ComposedQuery(object):
         def convertQuery(core, query):
             if query is None:
                 return None
+            print(converts)
             convertFunction = converts[core]
             if core == self.resultsFrom:
                 kwargs = {'composedQuery': self}
@@ -222,11 +224,9 @@ class ComposedQuery(object):
         self._queries = dict((core, convertQuery(core, v)) for core, v in self._queries.items())
         self._filterQueries = dict((core, [convertQuery(core, v) for v in values]) for core, values in self._filterQueries.items())
         self._rankQueries = dict((core, convertQuery(core, v)) for core, v in self._rankQueries.items())
-        print('&before&')
-        print(self._drilldownQueries)
-        self._drilldownQueries = dict((core, convertQuery(core, v)) for core, v in self._drilldownQueries.items())
-        print('&after&')
-        print(self._drilldownQueries)
+        for core, v in self._drilldownQueries.items():
+            if isinstance(v, QueryExpression):
+                self._drilldownQueries = {'summary': convertQuery(core, v)}
         for unite in self._unites:
             unite.convertQuery(convertQuery)
         self._otherCoreFacetFilters = dict((core, [convertQuery(core, v) for v in values]) for core, values in self._otherCoreFacetFilters.items())
