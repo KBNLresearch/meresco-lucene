@@ -122,6 +122,7 @@ class ConvertToComposedQuery(Observable):
                 print(cq._queries)
                 drillString = ' OR '.join(unpacked)
                 queryExpression = cqlToExpression(drillString)
+                print('--')
                 print(queryExpression.asDict())
                 cq._drilldownQueries = {'summary': queryExpression}
             else:

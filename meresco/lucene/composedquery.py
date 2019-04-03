@@ -93,7 +93,6 @@ class ComposedQuery(object):
         return self
 
     def addDrilldownQuery(self, core, drilldownQuery):
-        print(self._drilldownQueries)
         self.cores.add(core)
         self._drilldownQueries.setdefault(core, []).append(drilldownQuery)
         return self
@@ -223,6 +222,11 @@ class ComposedQuery(object):
         self._queries = dict((core, convertQuery(core, v)) for core, v in self._queries.items())
         self._filterQueries = dict((core, [convertQuery(core, v) for v in values]) for core, values in self._filterQueries.items())
         self._rankQueries = dict((core, convertQuery(core, v)) for core, v in self._rankQueries.items())
+        print('&before&')
+        print(self._drilldownQueries)
+        self._drilldownQueries = dict((core, convertQuery(core, v)) for core, v in self._drilldownQueries.items())
+        print('&after&')
+        print(self._drilldownQueries)
         for unite in self._unites:
             unite.convertQuery(convertQuery)
         self._otherCoreFacetFilters = dict((core, [convertQuery(core, v) for v in values]) for core, values in self._otherCoreFacetFilters.items())
