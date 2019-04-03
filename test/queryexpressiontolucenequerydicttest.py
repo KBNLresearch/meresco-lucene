@@ -1,5 +1,4 @@
-/'OR'\
- '# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 ## begin license ##
 #
 # "Meresco Lucene" is a set of components and tools to integrate Lucene (based on PyLucene) into Meresco
