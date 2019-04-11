@@ -29,6 +29,7 @@
 from collections import defaultdict
 
 from cqlparser import cqlToExpression
+from cqlparser.cqltoexpression import QueryExpression
 
 from meresco.core import Observable, asyncnoreturnvalue
 from meresco.lucene import ComposedQuery
