@@ -29,7 +29,6 @@
 from collections import defaultdict
 
 from cqlparser import cqlToExpression
-from cqlparser import parseString as parseCql
 
 from meresco.core import Observable, asyncnoreturnvalue
 from meresco.lucene import ComposedQuery
@@ -115,20 +114,8 @@ class ConvertToComposedQuery(Observable):
         for drilldownQuery in (drilldownQueries or []):
             core, fieldname = self._coreDrilldownQuery(drilldownQuery[0], self._cores)
             fieldname = self._drilldownFieldnamesTranslate(fieldname)
-            if len(drilldownQuery[1]) > 1:
-                unpacked = []
-                for dq in drilldownQuery[1]:
-                    unpacked.append("%s=%s" % (fieldname, dq[0]))
-                print(cq._queries)
-                drillString = ' OR '.join(unpacked)
-                queryExpression = cqlToExpression(drillString)
-                print('--')
-                print(queryExpression.asDict())
-                cq._drilldownQueries = {'summary': queryExpression}
-            else:
-                cq.addDrilldownQuery(core=core, drilldownQuery=(fieldname, drilldownQuery[1][0]))
+            cq.addDrilldownQuery(core=core, drilldownQuery=(fieldname, drilldownQuery[1][0]))
 
-        print(cq)
         result = yield self.any.executeComposedQuery(query=cq)
 
         drilldownData = getattr(result, "drilldownData", None)
